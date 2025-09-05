@@ -1,13 +1,22 @@
-import { User, Trophy, Leaf } from "lucide-react";
+import { User, Trophy, Leaf, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
+import { Navigate } from "react-router-dom";
 
 interface HeaderProps {
   currentView: string;
   onViewChange: (view: string) => void;
-  userName: string;
-  score: number;
 }
 
-const Header = ({ currentView, onViewChange, userName, score }: HeaderProps) => {
+const Header = ({ currentView, onViewChange }: HeaderProps) => {
+  const { user, signOut } = useAuth();
+  const { profile } = useProfile();
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Leaf },
     { id: 'quests', label: 'All Quests', icon: Trophy },
@@ -46,12 +55,20 @@ const Header = ({ currentView, onViewChange, userName, score }: HeaderProps) => 
         {/* User Profile */}
         <div className="flex items-center space-x-4">
           <div className="text-right hidden sm:block">
-            <p className="font-medium text-foreground">{userName}</p>
-            <p className="text-sm text-primary font-semibold">Score: {score} pts</p>
+            <p className="font-medium text-foreground">{profile?.display_name || user.email}</p>
+            <p className="text-sm text-primary font-semibold">Score: {profile?.sustainability_score || 0} pts</p>
           </div>
           <div className="w-10 h-10 rounded-full bg-gradient-earth flex items-center justify-center">
             <User className="w-6 h-6 text-secondary-dark" />
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={signOut}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <LogOut className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 

@@ -1,21 +1,26 @@
 import { Leaf, Droplets, Recycle, Award, Calendar, Target } from "lucide-react";
 import QuestCard from "./QuestCard";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
+import { useQuests } from "@/hooks/useQuests";
+import { useBadges } from "@/hooks/useBadges";
 
-interface DashboardProps {
-  userName: string;
-  activeQuests: any[];
-  badges: any[];
-  onStartQuest: (id: string) => void;
-  onCompleteQuest: (id: string) => void;
-}
+const Dashboard = () => {
+  const { user } = useAuth();
+  const { profile } = useProfile();
+  const { activeQuests, isLoading: questsLoading } = useQuests();
+  const { userBadges, isLoading: badgesLoading } = useBadges();
 
-const Dashboard = ({ userName, activeQuests, badges, onStartQuest, onCompleteQuest }: DashboardProps) => {
+  const userName = profile?.display_name || user?.email || "Farmer";
+
   const badgeIcons = {
     'water-saver': Droplets,
     'organic-champion': Leaf,
     'waste-warrior': Recycle,
     'soil-guardian': Target,
-    'eco-pioneer': Award
+    'eco-pioneer': Award,
+    'eco-warrior': Award,
+    'innovation-leader': Award
   };
 
   const getBadgeColor = (type: string) => {
@@ -24,10 +29,23 @@ const Dashboard = ({ userName, activeQuests, badges, onStartQuest, onCompleteQue
       'organic-champion': 'text-quest-progress bg-quest-bg',
       'waste-warrior': 'text-secondary-dark bg-secondary',
       'soil-guardian': 'text-badge-bronze bg-badge-bronze/20',
-      'eco-pioneer': 'text-badge-gold bg-badge-gold/20'
+      'eco-pioneer': 'text-badge-gold bg-badge-gold/20',
+      'eco-warrior': 'text-badge-gold bg-badge-gold/20',
+      'innovation-leader': 'text-primary bg-primary/20'
     };
     return colors[type] || 'text-primary bg-primary/20';
   };
+
+  if (questsLoading || badgesLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <Leaf className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
@@ -63,7 +81,7 @@ const Dashboard = ({ userName, activeQuests, badges, onStartQuest, onCompleteQue
             <span>Your Active Quests</span>
           </h3>
           <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
-            {activeQuests.filter(q => q.status === 'in-progress').length} in progress
+            {activeQuests.length} in progress
           </span>
         </div>
 
@@ -72,9 +90,13 @@ const Dashboard = ({ userName, activeQuests, badges, onStartQuest, onCompleteQue
             {activeQuests.map((quest) => (
               <QuestCard
                 key={quest.id}
-                {...quest}
-                onStartQuest={onStartQuest}
-                onCompleteQuest={onCompleteQuest}
+                id={quest.id}
+                title={quest.title}
+                description={quest.description}
+                progress={quest.progress}
+                points={quest.points}
+                status={quest.status}
+                category={quest.category}
               />
             ))}
           </div>
@@ -97,21 +119,22 @@ const Dashboard = ({ userName, activeQuests, badges, onStartQuest, onCompleteQue
             <span>My Badges</span>
           </h3>
           <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
-            {badges.length} earned
+            {userBadges.length} earned
           </span>
         </div>
 
-        {badges.length > 0 ? (
+        {userBadges.length > 0 ? (
           <div className="flex space-x-4 overflow-x-auto pb-4">
-            {badges.map((badge) => {
-              const IconComponent = badgeIcons[badge.type as keyof typeof badgeIcons] || Award;
+            {userBadges.map((userBadge) => {
+              const badge = userBadge.badge;
+              const IconComponent = badgeIcons[badge.icon_type as keyof typeof badgeIcons] || Award;
               return (
                 <div
-                  key={badge.id}
+                  key={userBadge.id}
                   className="flex-shrink-0 group cursor-pointer"
                   title={badge.description}
                 >
-                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 ${getBadgeColor(badge.type)}`}>
+                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 ${getBadgeColor(badge.icon_type)}`}>
                     <IconComponent className="w-10 h-10" />
                   </div>
                   <p className="text-center text-sm font-medium text-foreground mt-2 max-w-20">

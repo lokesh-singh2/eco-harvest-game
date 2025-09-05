@@ -1,15 +1,11 @@
 import { useState } from "react";
-import { Search, Filter, Target, CheckCircle, Clock } from "lucide-react";
+import { Search, Filter, Target, CheckCircle, Clock, Leaf } from "lucide-react";
 import QuestCard from "./QuestCard";
 import { Input } from "@/components/ui/input";
+import { useQuests } from "@/hooks/useQuests";
 
-interface AllQuestsProps {
-  quests: any[];
-  onStartQuest: (id: string) => void;
-  onCompleteQuest: (id: string) => void;
-}
-
-const AllQuests = ({ quests, onStartQuest, onCompleteQuest }: AllQuestsProps) => {
+const AllQuests = () => {
+  const { allQuests, isLoading } = useQuests();
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,7 +30,7 @@ const AllQuests = ({ quests, onStartQuest, onCompleteQuest }: AllQuestsProps) =>
     }
   ];
 
-  const filteredQuests = quests.filter(quest => {
+  const filteredQuests = allQuests.filter(quest => {
     const matchesTab = quest.status === activeTab;
     const matchesSearch = quest.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          quest.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -42,8 +38,19 @@ const AllQuests = ({ quests, onStartQuest, onCompleteQuest }: AllQuestsProps) =>
   });
 
   const getTabCount = (status: string) => {
-    return quests.filter(quest => quest.status === status).length;
+    return allQuests.filter(quest => quest.status === status).length;
   };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <Leaf className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+          <p className="text-muted-foreground">Loading quests...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
@@ -58,7 +65,7 @@ const AllQuests = ({ quests, onStartQuest, onCompleteQuest }: AllQuestsProps) =>
           </h2>
           <div className="text-right">
             <p className="text-sm text-muted-foreground">Total Quests</p>
-            <p className="text-2xl font-bold text-primary">{quests.length}</p>
+            <p className="text-2xl font-bold text-primary">{allQuests.length}</p>
           </div>
         </div>
 
@@ -120,9 +127,13 @@ const AllQuests = ({ quests, onStartQuest, onCompleteQuest }: AllQuestsProps) =>
               {filteredQuests.map((quest) => (
                 <QuestCard
                   key={quest.id}
-                  {...quest}
-                  onStartQuest={onStartQuest}
-                  onCompleteQuest={onCompleteQuest}
+                  id={quest.id}
+                  title={quest.title}
+                  description={quest.description}
+                  progress={quest.progress}
+                  points={quest.points}
+                  status={quest.status}
+                  category={quest.category}
                 />
               ))}
             </div>

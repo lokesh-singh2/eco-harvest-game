@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { CheckCircle, Clock, Play, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useQuests } from "@/hooks/useQuests";
+import { toast } from "@/hooks/use-toast";
 
 interface QuestCardProps {
   id: string;
@@ -8,8 +11,6 @@ interface QuestCardProps {
   progress: number;
   points: number;
   status: 'recommended' | 'in-progress' | 'completed';
-  onStartQuest?: (id: string) => void;
-  onCompleteQuest?: (id: string) => void;
   category?: string;
 }
 
@@ -20,15 +21,50 @@ const QuestCard = ({
   progress, 
   points, 
   status, 
-  onStartQuest,
-  onCompleteQuest,
   category 
 }: QuestCardProps) => {
-  const handleAction = () => {
-    if (status === 'recommended' && onStartQuest) {
-      onStartQuest(id);
-    } else if (status === 'in-progress' && progress === 100 && onCompleteQuest) {
-      onCompleteQuest(id);
+  const { startQuest, updateQuestProgress } = useQuests();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleStartQuest = async () => {
+    setIsLoading(true);
+    try {
+      await startQuest.mutateAsync(id);
+      toast({
+        title: "Quest Started!",
+        description: `You've started the "${title}" quest. Good luck!`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to start quest. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteQuest = async () => {
+    setIsLoading(true);
+    try {
+      await updateQuestProgress.mutateAsync({
+        questId: id,
+        progress: 100,
+        status: 'completed'
+      });
+      toast({
+        title: "Quest Completed!",
+        description: `Congratulations! You've earned ${points} points.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to complete quest. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,18 +130,20 @@ const QuestCard = ({
       <div className="flex justify-end">
         {status === 'recommended' && (
           <Button 
-            onClick={handleAction}
+            onClick={handleStartQuest}
+            disabled={isLoading}
             className="bg-primary hover:bg-primary-glow text-primary-foreground font-medium"
           >
-            Start Quest
+            {isLoading ? 'Starting...' : 'Start Quest'}
           </Button>
         )}
         {status === 'in-progress' && progress === 100 && (
           <Button 
-            onClick={handleAction}
+            onClick={handleCompleteQuest}
+            disabled={isLoading}
             className="bg-quest-progress hover:bg-primary-glow text-primary-foreground font-medium"
           >
-            Complete Quest
+            {isLoading ? 'Completing...' : 'Complete Quest'}
           </Button>
         )}
         {status === 'completed' && (
