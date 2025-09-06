@@ -46,7 +46,7 @@ const Index = () => {
       case 'quests':
         return <AllQuests />;
       case 'leaderboard':
-        return <Leaderboard currentUser={currentUser} />;
+        return <Leaderboard />;
       case 'rewards':
         return <Rewards />;
       default:
