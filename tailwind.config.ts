@@ -70,6 +70,16 @@ export default {
 					glow: 'hsl(var(--path-glow))',
 					primary: 'hsl(var(--path-primary))',
 					secondary: 'hsl(var(--path-secondary))'
+				},
+				'badge-enhanced': {
+					legendary: 'hsl(var(--badge-legendary))',
+					'legendary-glow': 'hsl(var(--badge-legendary-glow))',
+					epic: 'hsl(var(--badge-epic))',
+					'epic-glow': 'hsl(var(--badge-epic-glow))',
+					rare: 'hsl(var(--badge-rare))',
+					'rare-glow': 'hsl(var(--badge-rare-glow))',
+					common: 'hsl(var(--badge-common))',
+					'common-glow': 'hsl(var(--badge-common-glow))'
 				}
 			},
 			fontFamily: {
@@ -163,6 +173,52 @@ export default {
 					"100%": {
 						strokeDasharray: "1000 0"
 					}
+				},
+				'legendary-pulse': {
+					"0%, 100%": {
+						transform: "scale(1)",
+						filter: "drop-shadow(0 0 20px hsl(var(--badge-legendary-glow) / 0.7))"
+					},
+					"50%": {
+						transform: "scale(1.05)",
+						filter: "drop-shadow(0 0 40px hsl(var(--badge-legendary-glow) / 0.9))"
+					}
+				},
+				'epic-pulse': {
+					"0%, 100%": {
+						transform: "scale(1)",
+						filter: "drop-shadow(0 0 15px hsl(var(--badge-epic-glow) / 0.6))"
+					},
+					"50%": {
+						transform: "scale(1.03)",
+						filter: "drop-shadow(0 0 30px hsl(var(--badge-epic-glow) / 0.8))"
+					}
+				},
+				'rare-pulse': {
+					"0%, 100%": {
+						transform: "scale(1)",
+						filter: "drop-shadow(0 0 10px hsl(var(--badge-rare-glow) / 0.5))"
+					},
+					"50%": {
+						transform: "scale(1.02)",
+						filter: "drop-shadow(0 0 20px hsl(var(--badge-rare-glow) / 0.7))"
+					}
+				},
+				'aura-spin': {
+					"0%": {
+						transform: "rotate(0deg)"
+					},
+					"100%": {
+						transform: "rotate(360deg)"
+					}
+				},
+				'shimmer': {
+					"0%": {
+						backgroundPosition: "-200% 0"
+					},
+					"100%": {
+						backgroundPosition: "200% 0"
+					}
 				}
 			},
 			animation: {
@@ -173,7 +229,12 @@ export default {
 				'float': 'float 3s ease-in-out infinite',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
 				'walk': 'walk 4s ease-in-out infinite',
-				'path-draw': 'path-draw 2s ease-in-out infinite'
+				'path-draw': 'path-draw 2s ease-in-out infinite',
+				'legendary-pulse': 'legendary-pulse 3s ease-in-out infinite',
+				'epic-pulse': 'epic-pulse 2.5s ease-in-out infinite',
+				'rare-pulse': 'rare-pulse 2s ease-in-out infinite',
+				'aura-spin': 'aura-spin 8s linear infinite',
+				'shimmer': 'shimmer 2s linear infinite'
 			}
 		}
 	},

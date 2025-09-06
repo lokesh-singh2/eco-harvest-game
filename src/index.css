@@ -72,6 +72,16 @@ All colors MUST be HSL for proper theming support.
     --path-glow: 200 85% 70%; /* Bright cyan glow */
     --path-primary: 200 75% 60%; /* Main path color */
     --path-secondary: 180 70% 65%; /* Secondary glow */
+    
+    /* Enhanced Badge Colors */
+    --badge-legendary: 45 100% 51%; /* Brilliant gold */
+    --badge-legendary-glow: 45 100% 70%; /* Golden glow */
+    --badge-epic: 280 100% 70%; /* Vibrant purple */
+    --badge-epic-glow: 280 100% 85%; /* Purple glow */
+    --badge-rare: 220 100% 60%; /* Electric blue */
+    --badge-rare-glow: 220 100% 80%; /* Blue glow */
+    --badge-common: 145 70% 50%; /* Enhanced green */
+    --badge-common-glow: 145 70% 70%; /* Green glow */
   }
 
   .dark {
