@@ -5,6 +5,7 @@ import Dashboard from "@/components/Dashboard";
 import AllQuests from "@/components/AllQuests";
 import Leaderboard from "@/components/Leaderboard";
 import Rewards from "@/components/Rewards";
+import Badges from "@/components/Badges";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { Leaf } from "lucide-react";
@@ -49,6 +50,8 @@ const Index = () => {
         return <Leaderboard />;
       case 'rewards':
         return <Rewards />;
+      case 'badges':
+        return <Badges />;
       default:
         return <Dashboard />;
     }

@@ -1,4 +1,4 @@
-import { User, Trophy, Leaf, LogOut } from "lucide-react";
+import { User, Trophy, Award, Leaf, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
@@ -21,7 +21,8 @@ const Header = ({ currentView, onViewChange }: HeaderProps) => {
     { id: 'dashboard', label: 'Dashboard', icon: Leaf },
     { id: 'quests', label: 'All Quests', icon: Trophy },
     { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
-    { id: 'rewards', label: 'Rewards', icon: Trophy }
+    { id: 'rewards', label: 'Rewards', icon: Trophy },
+    { id: 'badges', label: 'Badges', icon: Award }
   ];
 
   return (

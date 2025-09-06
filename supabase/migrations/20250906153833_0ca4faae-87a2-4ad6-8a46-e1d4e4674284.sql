@@ -1,0 +1,22 @@
+-- Insert different badge types with points and attractive names
+INSERT INTO badges (name, description, icon_type) VALUES
+('Eco Warrior', 'Complete 5 sustainability quests', 'shield'),
+('Green Guardian', 'Maintain a 30-day streak of daily sustainable actions', 'leaf'),
+('Earth Champion', 'Reach 1000 sustainability points', 'trophy'),
+('Nature Protector', 'Complete all water conservation quests', 'droplet'),
+('Soil Master', 'Excel in soil health and composting activities', 'mountain'),
+('Harvest Hero', 'Successfully complete a full growing season', 'sun'),
+('Sustainability Star', 'Achieve top 10 ranking in leaderboard', 'star'),
+('Organic Pioneer', 'Complete all organic farming quests', 'flower'),
+('Climate Fighter', 'Reduce carbon footprint by 50%', 'zap'),
+('Green Innovator', 'Implement 3 new sustainable farming techniques', 'lightbulb'),
+('Water Wizard', 'Master water-efficient irrigation methods', 'waves'),
+('Compost King', 'Create perfect compost for 3 consecutive months', 'recycle'),
+('Bio Defender', 'Promote biodiversity in farming practices', 'bug'),
+('Energy Saver', 'Reduce energy consumption by 40%', 'battery'),
+('Seed Keeper', 'Preserve and share heirloom seed varieties', 'heart'),
+('Pollinator Friend', 'Create habitats for bees and butterflies', 'flower2'),
+('Carbon Catcher', 'Implement carbon sequestration practices', 'tree'),
+('Waste Warrior', 'Achieve zero waste in farming operations', 'trash'),
+('Future Farmer', 'Complete advanced sustainable agriculture course', 'graduation-cap'),
+('Legend of the Land', 'Ultimate achievement: 10,000 sustainability points', 'crown');
