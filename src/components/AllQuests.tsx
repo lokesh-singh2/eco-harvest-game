@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Search, Filter, Target, CheckCircle, Clock, Leaf, Calendar } from "lucide-react";
+import { Search, Filter, Target, CheckCircle, Clock, Leaf, Calendar, Trophy, Star, Award, Play, Lock } from "lucide-react";
 import QuestCard from "./QuestCard";
-import QuestMap from "./QuestMap";
+import QuestPathView from "./QuestPathView";
 import QuestModal from "./QuestModal";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useQuests } from "@/hooks/useQuests";
 
 const AllQuests = () => {
@@ -12,7 +13,7 @@ const AllQuests = () => {
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedQuest, setSelectedQuest] = useState<any>(null);
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [viewMode, setViewMode] = useState<'path' | 'grid'>('path');
 
   const tabs = [
     { 
@@ -67,14 +68,14 @@ const AllQuests = () => {
             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
               <Leaf className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">All Quests</h1>
+            <h1 className="text-2xl font-bold text-foreground">Quest Journey</h1>
           </div>
 
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Search"
+              placeholder="Search quests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 bg-background border-border focus:border-primary"
@@ -86,7 +87,7 @@ const AllQuests = () => {
         <div className="p-6 border-b border-border">
           <div className="flex items-center space-x-2 mb-4">
             <Filter className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-semibold text-foreground">Filter</h3>
+            <h3 className="font-semibold text-foreground">Quest Status</h3>
           </div>
 
           <div className="space-y-2">
@@ -125,26 +126,44 @@ const AllQuests = () => {
             <span className="font-semibold text-foreground">View Mode</span>
           </div>
           <div className="flex space-x-2">
-            <button
-              onClick={() => setViewMode('map')}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'map'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-              }`}
+            <Button
+              variant={viewMode === 'path' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('path')}
+              className="flex-1"
             >
-              Map View
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'list'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-              }`}
+              Path View
+            </Button>
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className="flex-1"
             >
-              List View
-            </button>
+              Grid View
+            </Button>
+          </div>
+        </div>
+
+        {/* Quest Stats */}
+        <div className="p-6 mt-auto">
+          <div className="bg-gradient-eco rounded-xl p-4 text-white">
+            <div className="flex items-center justify-between mb-2">
+              <Trophy className="w-6 h-6" />
+              <span className="text-sm opacity-90">Progress</span>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Completed</span>
+                <span>{getTabCount('completed')}/{allQuests.length}</span>
+              </div>
+              <div className="w-full bg-white/20 rounded-full h-2">
+                <div 
+                  className="bg-white rounded-full h-2 transition-all duration-500"
+                  style={{ width: `${(getTabCount('completed') / allQuests.length) * 100}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -163,43 +182,52 @@ const AllQuests = () => {
                 {searchQuery && ` matching "${searchQuery}"`}
               </p>
             </div>
-            <Badge variant="outline" className="text-primary border-primary">
-              Total: {allQuests.length}
-            </Badge>
+            <div className="flex items-center space-x-2">
+              <Badge variant="outline" className="text-primary border-primary">
+                Total: {allQuests.length}
+              </Badge>
+              {activeTab === 'completed' && (
+                <Badge className="bg-quest-progress text-primary-foreground">
+                  <Award className="w-3 h-3 mr-1" />
+                  {getTabCount('completed')} Completed
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Quest Content */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 overflow-hidden">
           {filteredQuests.length > 0 ? (
             <>
-              {viewMode === 'map' ? (
-                <div className="h-full min-h-[500px]">
-                  <QuestMap 
-                    quests={filteredQuests}
-                    onQuestClick={setSelectedQuest}
-                  />
-                </div>
+              {viewMode === 'path' ? (
+                <QuestPathView 
+                  quests={filteredQuests}
+                  onQuestClick={setSelectedQuest}
+                  activeTab={activeTab}
+                />
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {filteredQuests.map((quest) => (
-                    <QuestCard
-                      key={quest.id}
-                      id={quest.id}
-                      title={quest.title}
-                      description={quest.description}
-                      progress={quest.progress}
-                      points={quest.points}
-                      status={quest.status}
-                      category={quest.category}
-                    />
-                  ))}
+                <div className="p-6 overflow-auto h-full">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredQuests.map((quest) => (
+                      <QuestCard
+                        key={quest.id}
+                        id={quest.id}
+                        title={quest.title}
+                        description={quest.description}
+                        progress={quest.progress}
+                        points={quest.points}
+                        status={quest.status}
+                        category={quest.category}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
             </>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <div className="text-center py-16 bg-muted/30 rounded-2xl max-w-md">
+              <div className="text-center py-16 bg-muted/30 rounded-2xl max-w-md mx-6">
                 <Filter className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-foreground mb-2">
                   No {activeTab.replace('-', ' ')} quests found
