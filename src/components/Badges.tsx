@@ -91,7 +91,15 @@ const Badges = () => {
   };
 
   const getIconStyles = (rarity: string, isEarned: boolean) => {
-    if (!isEarned) return 'text-muted-foreground/50 transition-colors group-hover:text-muted-foreground/70';
+    if (!isEarned) {
+      // Make unearned icons still show color but dimmed
+      switch (rarity) {
+        case 'legendary': return 'text-badge-enhanced-legendary/60 drop-shadow-[0_0_8px_hsl(var(--badge-legendary-glow)/0.4)] transition-all group-hover:text-badge-enhanced-legendary/80';
+        case 'epic': return 'text-badge-enhanced-epic/60 drop-shadow-[0_0_6px_hsl(var(--badge-epic-glow)/0.3)] transition-all group-hover:text-badge-enhanced-epic/80';
+        case 'rare': return 'text-badge-enhanced-rare/60 drop-shadow-[0_0_5px_hsl(var(--badge-rare-glow)/0.3)] transition-all group-hover:text-badge-enhanced-rare/80';
+        default: return 'text-badge-enhanced-common/60 drop-shadow-[0_0_4px_hsl(var(--badge-common-glow)/0.3)] transition-all group-hover:text-badge-enhanced-common/80';
+      }
+    }
     
     switch (rarity) {
       case 'legendary': return 'text-badge-enhanced-legendary drop-shadow-[0_0_15px_hsl(var(--badge-legendary-glow)/0.9)] filter brightness-110 animate-pulse';
@@ -201,6 +209,25 @@ const Badges = () => {
               key={badge.id}
               className={`p-6 rounded-2xl ${getBadgeStyles(rarity, isEarned)} cursor-pointer`}
             >
+              {/* Lock overlay for unearned badges */}
+              {!isEarned && (
+                <div className="absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-30">
+                  <div className="bg-black/40 rounded-full p-3 backdrop-blur-sm border border-white/20">
+                    <Lock className="w-6 h-6 text-white/90 drop-shadow-lg" />
+                  </div>
+                </div>
+              )}
+
+              {/* Subtle preview glow for unearned badges */}
+              {!isEarned && (
+                <div className={`absolute inset-0 rounded-2xl opacity-20 animate-pulse ${
+                  rarity === 'legendary' ? 'bg-gradient-to-br from-badge-enhanced-legendary/10 to-badge-enhanced-legendary-glow/5' :
+                  rarity === 'epic' ? 'bg-gradient-to-br from-badge-enhanced-epic/8 to-badge-enhanced-epic-glow/4' :
+                  rarity === 'rare' ? 'bg-gradient-to-br from-badge-enhanced-rare/6 to-badge-enhanced-rare-glow/3' :
+                  'bg-gradient-to-br from-badge-enhanced-common/5 to-badge-enhanced-common-glow/2'
+                }`} style={{ animationDuration: '3s' }} />
+              )}
+
               {/* Legendary Divine Aura */}
               {isEarned && rarity === 'legendary' && (
                 <>
@@ -256,15 +283,15 @@ const Badges = () => {
               {/* Badge Icon with Magical Enhancement */}
               <div className="text-center mb-4 relative z-10">
                 <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 relative transition-all duration-700 ${
-                  isEarned ? 'bg-white/15 backdrop-blur-md border-2' : 'bg-muted/10 border border-muted/30'
+                  isEarned ? 'bg-white/15 backdrop-blur-md border-2' : 'bg-white/8 backdrop-blur-sm border-2'
                 } ${
-                  isEarned && rarity === 'legendary' ? 'border-badge-enhanced-legendary shadow-[0_0_40px_hsl(var(--badge-legendary-glow)/0.6)]' :
-                  isEarned && rarity === 'epic' ? 'border-badge-enhanced-epic shadow-[0_0_30px_hsl(var(--badge-epic-glow)/0.5)]' :
-                  isEarned && rarity === 'rare' ? 'border-badge-enhanced-rare shadow-[0_0_25px_hsl(var(--badge-rare-glow)/0.4)]' :
-                  isEarned ? 'border-badge-enhanced-common shadow-[0_0_20px_hsl(var(--badge-common-glow)/0.3)]' : ''
+                  rarity === 'legendary' ? `border-badge-enhanced-legendary${isEarned ? '' : '/40'} shadow-[0_0_40px_hsl(var(--badge-legendary-glow)/${isEarned ? '0.6' : '0.2'})]` :
+                  rarity === 'epic' ? `border-badge-enhanced-epic${isEarned ? '' : '/35'} shadow-[0_0_30px_hsl(var(--badge-epic-glow)/${isEarned ? '0.5' : '0.15'})]` :
+                  rarity === 'rare' ? `border-badge-enhanced-rare${isEarned ? '' : '/30'} shadow-[0_0_25px_hsl(var(--badge-rare-glow)/${isEarned ? '0.4' : '0.12'})]` :
+                  `border-badge-enhanced-common${isEarned ? '' : '/25'} shadow-[0_0_20px_hsl(var(--badge-common-glow)/${isEarned ? '0.3' : '0.1'})]`
                 }`}>
                   
-                  {/* Multi-layer glow backgrounds */}
+                  {/* Multi-layer glow backgrounds for earned badges */}
                   {isEarned && rarity === 'legendary' && (
                     <>
                       <div className="absolute inset-0 rounded-full bg-badge-enhanced-legendary/30 animate-pulse blur-sm" />
@@ -278,9 +305,9 @@ const Badges = () => {
                     <div className="absolute inset-0 rounded-full bg-badge-enhanced-rare/20 animate-pulse blur-sm" />
                   )}
                   
-                  <IconComponent className={`w-12 h-12 relative z-20 ${getIconStyles(rarity, isEarned)} transition-all duration-500 group-hover:scale-125 group-hover:rotate-12`} />
+                  <IconComponent className={`w-12 h-12 relative z-20 ${getIconStyles(rarity, isEarned)} transition-all duration-500 group-hover:scale-125 ${isEarned ? 'group-hover:rotate-12' : 'group-hover:rotate-6'}`} />
                   
-                  {/* Enhanced glow rings */}
+                  {/* Enhanced glow rings for earned badges */}
                   {isEarned && rarity === 'legendary' && (
                     <>
                       <div className="absolute inset-0 rounded-full border-2 border-badge-enhanced-legendary opacity-60 animate-pulse" />
@@ -313,15 +340,23 @@ const Badges = () => {
               {/* Badge Info with enhanced styling */}
               <div className="text-center space-y-3 relative z-10">
                 <h3 className={`font-bold text-lg transition-all duration-300 ${
-                  isEarned ? 'text-foreground group-hover:scale-105' : 'text-muted-foreground'
+                  isEarned ? 'text-foreground group-hover:scale-105' : 'text-foreground/80 group-hover:text-foreground'
                 } ${rarity === 'legendary' && isEarned ? 'text-shadow-lg' : ''}`}>
                   {badge.name}
                 </h3>
                 <p className={`text-sm leading-relaxed ${
-                  isEarned ? 'text-muted-foreground' : 'text-muted-foreground/60'
+                  isEarned ? 'text-muted-foreground' : 'text-muted-foreground/70 group-hover:text-muted-foreground/90'
                 }`}>
                   {badge.description}
                 </p>
+                
+                {/* Lock message for unearned badges */}
+                {!isEarned && (
+                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-muted/60 text-muted-foreground border border-muted">
+                    <Lock className="w-3 h-3" />
+                    <span>Complete quests to unlock</span>
+                  </div>
+                )}
                 
                 {/* Earned date with special styling */}
                 {isEarned && badge.earned_at && (
