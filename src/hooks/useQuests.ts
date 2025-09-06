@@ -2,6 +2,27 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
+export interface QuestTask {
+  id: string;
+  quest_id: string;
+  title: string;
+  description: string | null;
+  order_index: number;
+  is_required: boolean;
+  created_at: string;
+}
+
+export interface UserTaskProgress {
+  id: string;
+  user_id: string;
+  task_id: string;
+  quest_id: string;
+  is_completed: boolean;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Quest {
   id: string;
   title: string;
@@ -10,6 +31,7 @@ export interface Quest {
   category: string;
   difficulty: string;
   created_at: string;
+  tasks?: QuestTask[];
 }
 
 export interface UserQuest {
@@ -34,7 +56,10 @@ export const useQuests = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('quests')
-        .select('*')
+        .select(`
+          *,
+          tasks:quest_tasks(*)
+        `)
         .order('created_at', { ascending: true });
       
       if (error) throw error;
@@ -57,6 +82,22 @@ export const useQuests = () => {
       
       if (error) throw error;
       return data as UserQuest[];
+    },
+    enabled: !!user?.id,
+  });
+
+  const { data: userTaskProgress = [], isLoading: taskProgressLoading } = useQuery({
+    queryKey: ['user-task-progress', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      
+      const { data, error } = await supabase
+        .from('user_task_progress')
+        .select('*')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      return data as UserTaskProgress[];
     },
     enabled: !!user?.id,
   });
@@ -106,17 +147,52 @@ export const useQuests = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-quests'] });
+      queryClient.invalidateQueries({ queryKey: ['user-task-progress'] });
     },
   });
 
-  // Combine quests with user progress
+  const updateTaskProgress = useMutation({
+    mutationFn: async ({ taskId, questId, isCompleted }: { taskId: string; questId: string; isCompleted: boolean }) => {
+      if (!user?.id) throw new Error('No user');
+      
+      const { data, error } = await supabase
+        .from('user_task_progress')
+        .upsert({
+          user_id: user.id,
+          task_id: taskId,
+          quest_id: questId,
+          is_completed: isCompleted,
+          completed_at: isCompleted ? new Date().toISOString() : null,
+        })
+        .select();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-task-progress'] });
+      queryClient.invalidateQueries({ queryKey: ['user-quests'] });
+    },
+  });
+
+  // Combine quests with user progress and task completion
   const questsWithProgress = allQuests.map(quest => {
     const userQuest = userQuests.find(uq => uq.quest_id === quest.id);
+    const questTaskProgress = userTaskProgress.filter(tp => tp.quest_id === quest.id);
+    
+    // Calculate progress based on completed tasks if quest has tasks
+    let calculatedProgress = userQuest?.progress || 0;
+    if (quest.tasks && quest.tasks.length > 0) {
+      const completedTasks = questTaskProgress.filter(tp => tp.is_completed).length;
+      calculatedProgress = Math.round((completedTasks / quest.tasks.length) * 100);
+    }
+    
     return {
       ...quest,
       status: userQuest?.status || 'recommended',
-      progress: userQuest?.progress || 0,
+      progress: calculatedProgress,
       userQuestId: userQuest?.id,
+      taskProgress: questTaskProgress,
     };
   });
 
@@ -126,8 +202,10 @@ export const useQuests = () => {
     allQuests: questsWithProgress,
     activeQuests,
     userQuests,
-    isLoading: questsLoading || userQuestsLoading,
+    userTaskProgress,
+    isLoading: questsLoading || userQuestsLoading || taskProgressLoading,
     startQuest,
     updateQuestProgress,
+    updateTaskProgress,
   };
 };

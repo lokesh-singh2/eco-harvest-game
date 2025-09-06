@@ -68,6 +68,44 @@ export type Database = {
         }
         Relationships: []
       }
+      quest_tasks: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_required: boolean
+          order_index: number
+          quest_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_required?: boolean
+          order_index?: number
+          quest_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_required?: boolean
+          order_index?: number
+          quest_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_tasks_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quests: {
         Row: {
           category: string
@@ -194,6 +232,54 @@ export type Database = {
             columns: ["quest_id"]
             isOneToOne: false
             referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_task_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          quest_id: string
+          task_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          quest_id: string
+          task_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          quest_id?: string
+          task_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_task_progress_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_task_progress_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "quest_tasks"
             referencedColumns: ["id"]
           },
         ]
