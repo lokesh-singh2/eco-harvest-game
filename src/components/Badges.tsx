@@ -91,13 +91,13 @@ const Badges = () => {
   };
 
   const getIconStyles = (rarity: string, isEarned: boolean) => {
-    if (!isEarned) return 'text-muted-foreground/60';
+    if (!isEarned) return 'text-muted-foreground/50 transition-colors group-hover:text-muted-foreground/70';
     
     switch (rarity) {
-      case 'legendary': return 'text-badge-enhanced-legendary drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]';
-      case 'epic': return 'text-badge-enhanced-epic drop-shadow-[0_0_6px_rgba(147,51,234,0.6)]';
-      case 'rare': return 'text-badge-enhanced-rare drop-shadow-[0_0_4px_rgba(59,130,246,0.5)]';
-      default: return 'text-badge-enhanced-common drop-shadow-[0_0_3px_rgba(34,197,94,0.4)]';
+      case 'legendary': return 'text-badge-enhanced-legendary drop-shadow-[0_0_15px_hsl(var(--badge-legendary-glow)/0.9)] filter brightness-110 animate-pulse';
+      case 'epic': return 'text-badge-enhanced-epic drop-shadow-[0_0_12px_hsl(var(--badge-epic-glow)/0.8)] filter brightness-105';
+      case 'rare': return 'text-badge-enhanced-rare drop-shadow-[0_0_10px_hsl(var(--badge-rare-glow)/0.7)] filter brightness-102';
+      default: return 'text-badge-enhanced-common drop-shadow-[0_0_8px_hsl(var(--badge-common-glow)/0.6)]';
     }
   };
 
@@ -201,24 +201,41 @@ const Badges = () => {
               key={badge.id}
               className={`p-6 rounded-2xl ${getBadgeStyles(rarity, isEarned)} cursor-pointer`}
             >
-              {/* Legendary Aura Effect */}
+              {/* Legendary Divine Aura */}
               {isEarned && rarity === 'legendary' && (
-                <div className="absolute -inset-4 rounded-3xl opacity-30 animate-aura-spin">
-                  <div className="w-full h-full rounded-3xl bg-gradient-conic from-badge-enhanced-legendary via-badge-enhanced-legendary-glow via-badge-enhanced-legendary to-badge-enhanced-legendary blur-sm" />
-                </div>
+                <>
+                  <div className="absolute -inset-6 rounded-3xl opacity-40 animate-aura-spin">
+                    <div className="w-full h-full rounded-3xl bg-gradient-conic from-badge-enhanced-legendary via-badge-enhanced-legendary-glow via-transparent to-badge-enhanced-legendary blur-lg" />
+                  </div>
+                  <div className="absolute -inset-4 rounded-3xl opacity-60 animate-aura-spin" style={{ animationDirection: 'reverse', animationDuration: '8s' }}>
+                    <div className="w-full h-full rounded-3xl bg-gradient-conic from-transparent via-badge-enhanced-legendary-glow to-transparent blur-md" />
+                  </div>
+                </>
               )}
 
-              {/* Epic Aura Effect */}
+              {/* Epic Mystical Aura */}
               {isEarned && rarity === 'epic' && (
-                <div className="absolute -inset-3 rounded-2xl opacity-25 animate-aura-spin" style={{ animationDuration: '6s' }}>
-                  <div className="w-full h-full rounded-2xl bg-gradient-conic from-badge-enhanced-epic via-badge-enhanced-epic-glow to-badge-enhanced-epic blur-sm" />
+                <>
+                  <div className="absolute -inset-4 rounded-2xl opacity-35 animate-aura-spin" style={{ animationDuration: '10s' }}>
+                    <div className="w-full h-full rounded-2xl bg-gradient-conic from-badge-enhanced-epic via-badge-enhanced-epic-glow to-transparent blur-lg" />
+                  </div>
+                  <div className="absolute -inset-2 rounded-2xl opacity-50 animate-aura-spin" style={{ animationDirection: 'reverse', animationDuration: '6s' }}>
+                    <div className="w-full h-full rounded-2xl bg-gradient-conic from-transparent via-badge-enhanced-epic-glow to-badge-enhanced-epic blur-sm" />
+                  </div>
+                </>
+              )}
+
+              {/* Rare Crystal Aura */}
+              {isEarned && rarity === 'rare' && (
+                <div className="absolute -inset-3 rounded-2xl opacity-30 animate-aura-spin" style={{ animationDuration: '8s' }}>
+                  <div className="w-full h-full rounded-2xl bg-gradient-conic from-badge-enhanced-rare via-badge-enhanced-rare-glow to-transparent blur-md" />
                 </div>
               )}
 
-              {/* Shimmer Effect for Earned Badges */}
+              {/* Enhanced Shimmer Effect */}
               {isEarned && (
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
-                     style={{ backgroundSize: '200% 100%' }} />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
+                     style={{ backgroundSize: '300% 100%' }} />
               )}
 
               {/* Rarity indicator with enhanced styling */}
@@ -236,24 +253,45 @@ const Badges = () => {
                 </Badge>
               </div>
 
-              {/* Badge Icon with enhanced glow */}
+              {/* Badge Icon with Magical Enhancement */}
               <div className="text-center mb-4 relative z-10">
-                <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 relative ${
-                  isEarned ? 'bg-white/10 backdrop-blur-sm' : 'bg-muted/10'
-                } ${isEarned && rarity === 'legendary' ? 'shadow-[0_0_30px_rgba(255,215,0,0.5)]' : ''}`}>
+                <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 relative transition-all duration-700 ${
+                  isEarned ? 'bg-white/15 backdrop-blur-md border-2' : 'bg-muted/10 border border-muted/30'
+                } ${
+                  isEarned && rarity === 'legendary' ? 'border-badge-enhanced-legendary shadow-[0_0_40px_hsl(var(--badge-legendary-glow)/0.6)]' :
+                  isEarned && rarity === 'epic' ? 'border-badge-enhanced-epic shadow-[0_0_30px_hsl(var(--badge-epic-glow)/0.5)]' :
+                  isEarned && rarity === 'rare' ? 'border-badge-enhanced-rare shadow-[0_0_25px_hsl(var(--badge-rare-glow)/0.4)]' :
+                  isEarned ? 'border-badge-enhanced-common shadow-[0_0_20px_hsl(var(--badge-common-glow)/0.3)]' : ''
+                }`}>
                   
-                  {/* Icon glow background for legendary */}
+                  {/* Multi-layer glow backgrounds */}
                   {isEarned && rarity === 'legendary' && (
-                    <div className="absolute inset-0 rounded-full bg-badge-enhanced-legendary/20 animate-pulse" />
+                    <>
+                      <div className="absolute inset-0 rounded-full bg-badge-enhanced-legendary/30 animate-pulse blur-sm" />
+                      <div className="absolute inset-1 rounded-full bg-badge-enhanced-legendary-glow/20 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                    </>
+                  )}
+                  {isEarned && rarity === 'epic' && (
+                    <div className="absolute inset-0 rounded-full bg-badge-enhanced-epic/25 animate-pulse blur-sm" />
+                  )}
+                  {isEarned && rarity === 'rare' && (
+                    <div className="absolute inset-0 rounded-full bg-badge-enhanced-rare/20 animate-pulse blur-sm" />
                   )}
                   
-                  <IconComponent className={`w-10 h-10 relative z-10 ${getIconStyles(rarity, isEarned)} transition-all duration-300 group-hover:scale-110`} />
+                  <IconComponent className={`w-12 h-12 relative z-20 ${getIconStyles(rarity, isEarned)} transition-all duration-500 group-hover:scale-125 group-hover:rotate-12`} />
                   
-                  {/* Additional glow ring for powerful badges */}
-                  {isEarned && (rarity === 'legendary' || rarity === 'epic') && (
-                    <div className={`absolute inset-0 rounded-full border-2 opacity-50 animate-pulse ${
-                      rarity === 'legendary' ? 'border-badge-enhanced-legendary' : 'border-badge-enhanced-epic'
-                    }`} />
+                  {/* Enhanced glow rings */}
+                  {isEarned && rarity === 'legendary' && (
+                    <>
+                      <div className="absolute inset-0 rounded-full border-2 border-badge-enhanced-legendary opacity-60 animate-pulse" />
+                      <div className="absolute -inset-1 rounded-full border border-badge-enhanced-legendary-glow opacity-40 animate-pulse" style={{ animationDelay: '1s' }} />
+                    </>
+                  )}
+                  {isEarned && rarity === 'epic' && (
+                    <div className="absolute inset-0 rounded-full border-2 border-badge-enhanced-epic opacity-50 animate-pulse" />
+                  )}
+                  {isEarned && rarity === 'rare' && (
+                    <div className="absolute inset-0 rounded-full border border-badge-enhanced-rare opacity-40 animate-pulse" />
                   )}
                 </div>
                 
@@ -299,21 +337,34 @@ const Badges = () => {
                 )}
               </div>
 
-              {/* Powerful badge special effects */}
+              {/* Legendary Divine Particles */}
               {isEarned && rarity === 'legendary' && (
                 <>
-                  {/* Golden particles */}
-                  <div className="absolute top-4 left-4 w-2 h-2 bg-badge-enhanced-legendary rounded-full animate-float opacity-60" />
-                  <div className="absolute bottom-6 right-6 w-1.5 h-1.5 bg-badge-enhanced-legendary-glow rounded-full animate-float opacity-70" style={{ animationDelay: '1s' }} />
-                  <div className="absolute top-1/2 right-4 w-1 h-1 bg-badge-enhanced-legendary rounded-full animate-float opacity-50" style={{ animationDelay: '2s' }} />
+                  <div className="absolute top-3 left-3 w-3 h-3 bg-badge-enhanced-legendary rounded-full animate-magical-float opacity-80 blur-sm" />
+                  <div className="absolute top-8 right-5 w-2 h-2 bg-badge-enhanced-legendary-glow rounded-full animate-magical-float opacity-90" style={{ animationDelay: '1s' }} />
+                  <div className="absolute bottom-6 left-6 w-2.5 h-2.5 bg-badge-enhanced-legendary rounded-full animate-magical-float opacity-70" style={{ animationDelay: '2s' }} />
+                  <div className="absolute bottom-4 right-3 w-1.5 h-1.5 bg-badge-enhanced-legendary-glow rounded-full animate-magical-float opacity-85" style={{ animationDelay: '3s' }} />
+                  <div className="absolute top-1/2 left-2 w-1 h-1 bg-badge-enhanced-legendary rounded-full animate-magical-float opacity-60" style={{ animationDelay: '4s' }} />
+                  <div className="absolute top-1/3 right-2 w-1.5 h-1.5 bg-badge-enhanced-legendary-glow rounded-full animate-magical-float opacity-75" style={{ animationDelay: '0.5s' }} />
                 </>
               )}
 
-              {/* Epic badge special effects */}
+              {/* Epic Mystical Effects */}
               {isEarned && rarity === 'epic' && (
                 <>
-                  <div className="absolute top-6 right-8 w-1.5 h-1.5 bg-badge-enhanced-epic rounded-full animate-float opacity-60" />
-                  <div className="absolute bottom-8 left-6 w-1 h-1 bg-badge-enhanced-epic-glow rounded-full animate-float opacity-70" style={{ animationDelay: '1.5s' }} />
+                  <div className="absolute top-5 right-7 w-2 h-2 bg-badge-enhanced-epic rounded-full animate-magical-float opacity-70" />
+                  <div className="absolute bottom-7 left-5 w-1.5 h-1.5 bg-badge-enhanced-epic-glow rounded-full animate-magical-float opacity-80" style={{ animationDelay: '1.5s' }} />
+                  <div className="absolute top-1/3 left-3 w-1 h-1 bg-badge-enhanced-epic rounded-full animate-magical-float opacity-60" style={{ animationDelay: '2.5s' }} />
+                  <div className="absolute bottom-1/3 right-4 w-1.5 h-1.5 bg-badge-enhanced-epic-glow rounded-full animate-magical-float opacity-75" style={{ animationDelay: '1s' }} />
+                </>
+              )}
+
+              {/* Rare Crystal Sparkles */}
+              {isEarned && rarity === 'rare' && (
+                <>
+                  <div className="absolute top-6 right-6 w-1.5 h-1.5 bg-badge-enhanced-rare rounded-full animate-magical-float opacity-70" />
+                  <div className="absolute bottom-8 left-7 w-1 h-1 bg-badge-enhanced-rare-glow rounded-full animate-magical-float opacity-80" style={{ animationDelay: '1.8s' }} />
+                  <div className="absolute top-1/2 right-3 w-1 h-1 bg-badge-enhanced-rare rounded-full animate-magical-float opacity-65" style={{ animationDelay: '0.8s' }} />
                 </>
               )}
             </div>

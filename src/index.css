@@ -73,15 +73,28 @@ All colors MUST be HSL for proper theming support.
     --path-primary: 200 75% 60%; /* Main path color */
     --path-secondary: 180 70% 65%; /* Secondary glow */
     
-    /* Enhanced Badge Colors */
-    --badge-legendary: 45 100% 51%; /* Brilliant gold */
-    --badge-legendary-glow: 45 100% 70%; /* Golden glow */
-    --badge-epic: 280 100% 70%; /* Vibrant purple */
-    --badge-epic-glow: 280 100% 85%; /* Purple glow */
-    --badge-rare: 220 100% 60%; /* Electric blue */
-    --badge-rare-glow: 220 100% 80%; /* Blue glow */
-    --badge-common: 145 70% 50%; /* Enhanced green */
-    --badge-common-glow: 145 70% 70%; /* Green glow */
+    /* Enhanced Badge Colors with Magical Aura */
+    --badge-legendary: 45 100% 55%; /* Brilliant gold */
+    --badge-legendary-glow: 45 100% 75%; /* Radiant golden glow */
+    --badge-legendary-shadow: 45 90% 45%; /* Deep golden shadow */
+    
+    --badge-epic: 280 100% 65%; /* Royal purple */
+    --badge-epic-glow: 280 100% 80%; /* Mystical purple glow */
+    --badge-epic-shadow: 280 80% 50%; /* Deep purple shadow */
+    
+    --badge-rare: 220 100% 55%; /* Electric blue */
+    --badge-rare-glow: 220 100% 75%; /* Crystal blue glow */
+    --badge-rare-shadow: 220 80% 40%; /* Deep blue shadow */
+    
+    --badge-common: 145 70% 45%; /* Forest green */
+    --badge-common-glow: 145 70% 65%; /* Nature green glow */
+    --badge-common-shadow: 145 60% 30%; /* Deep forest shadow */
+
+    /* Gradient Magic */
+    --gradient-legendary: linear-gradient(135deg, hsl(var(--badge-legendary)), hsl(var(--badge-legendary-glow)), hsl(var(--badge-legendary)));
+    --gradient-epic: linear-gradient(135deg, hsl(var(--badge-epic)), hsl(var(--badge-epic-glow)), hsl(var(--badge-epic)));
+    --gradient-rare: linear-gradient(135deg, hsl(var(--badge-rare)), hsl(var(--badge-rare-glow)), hsl(var(--badge-rare)));
+    --gradient-common: linear-gradient(135deg, hsl(var(--badge-common)), hsl(var(--badge-common-glow)), hsl(var(--badge-common)));
   }
 
   .dark {

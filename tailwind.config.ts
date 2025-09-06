@@ -74,12 +74,16 @@ export default {
 				'badge-enhanced': {
 					legendary: 'hsl(var(--badge-legendary))',
 					'legendary-glow': 'hsl(var(--badge-legendary-glow))',
+					'legendary-shadow': 'hsl(var(--badge-legendary-shadow))',
 					epic: 'hsl(var(--badge-epic))',
 					'epic-glow': 'hsl(var(--badge-epic-glow))',
+					'epic-shadow': 'hsl(var(--badge-epic-shadow))',
 					rare: 'hsl(var(--badge-rare))',
 					'rare-glow': 'hsl(var(--badge-rare-glow))',
+					'rare-shadow': 'hsl(var(--badge-rare-shadow))',
 					common: 'hsl(var(--badge-common))',
-					'common-glow': 'hsl(var(--badge-common-glow))'
+					'common-glow': 'hsl(var(--badge-common-glow))',
+					'common-shadow': 'hsl(var(--badge-common-shadow))'
 				}
 			},
 			fontFamily: {
@@ -88,7 +92,12 @@ export default {
 			backgroundImage: {
 				'gradient-eco': 'var(--gradient-eco)',
 				'gradient-earth': 'var(--gradient-earth)',
-				'gradient-growth': 'var(--gradient-growth)'
+				'gradient-growth': 'var(--gradient-growth)',
+				'gradient-legendary': 'var(--gradient-legendary)',
+				'gradient-epic': 'var(--gradient-epic)',
+				'gradient-rare': 'var(--gradient-rare)',
+				'gradient-common': 'var(--gradient-common)',
+				'gradient-conic': 'conic-gradient(from 0deg, transparent, currentColor, transparent)'
 			},
 			boxShadow: {
 				'natural': 'var(--shadow-natural)',
@@ -177,31 +186,49 @@ export default {
 				'legendary-pulse': {
 					"0%, 100%": {
 						transform: "scale(1)",
-						filter: "drop-shadow(0 0 20px hsl(var(--badge-legendary-glow) / 0.7))"
+						filter: "drop-shadow(0 0 25px hsl(var(--badge-legendary-glow) / 0.8)) drop-shadow(0 0 50px hsl(var(--badge-legendary) / 0.4))"
 					},
-					"50%": {
+					"33%": {
+						transform: "scale(1.08)",
+						filter: "drop-shadow(0 0 35px hsl(var(--badge-legendary-glow) / 1)) drop-shadow(0 0 70px hsl(var(--badge-legendary) / 0.6))"
+					},
+					"66%": {
 						transform: "scale(1.05)",
-						filter: "drop-shadow(0 0 40px hsl(var(--badge-legendary-glow) / 0.9))"
+						filter: "drop-shadow(0 0 45px hsl(var(--badge-legendary-glow) / 0.9)) drop-shadow(0 0 80px hsl(var(--badge-legendary) / 0.5))"
 					}
 				},
 				'epic-pulse': {
 					"0%, 100%": {
 						transform: "scale(1)",
-						filter: "drop-shadow(0 0 15px hsl(var(--badge-epic-glow) / 0.6))"
+						filter: "drop-shadow(0 0 20px hsl(var(--badge-epic-glow) / 0.7)) drop-shadow(0 0 40px hsl(var(--badge-epic) / 0.3))"
 					},
 					"50%": {
-						transform: "scale(1.03)",
-						filter: "drop-shadow(0 0 30px hsl(var(--badge-epic-glow) / 0.8))"
+						transform: "scale(1.06)",
+						filter: "drop-shadow(0 0 30px hsl(var(--badge-epic-glow) / 0.9)) drop-shadow(0 0 60px hsl(var(--badge-epic) / 0.5))"
 					}
 				},
 				'rare-pulse': {
 					"0%, 100%": {
 						transform: "scale(1)",
-						filter: "drop-shadow(0 0 10px hsl(var(--badge-rare-glow) / 0.5))"
+						filter: "drop-shadow(0 0 15px hsl(var(--badge-rare-glow) / 0.6)) drop-shadow(0 0 30px hsl(var(--badge-rare) / 0.3))"
 					},
 					"50%": {
-						transform: "scale(1.02)",
-						filter: "drop-shadow(0 0 20px hsl(var(--badge-rare-glow) / 0.7))"
+						transform: "scale(1.04)",
+						filter: "drop-shadow(0 0 25px hsl(var(--badge-rare-glow) / 0.8)) drop-shadow(0 0 45px hsl(var(--badge-rare) / 0.4))"
+					}
+				},
+				'magical-float': {
+					"0%, 100%": {
+						transform: "translateY(0px) rotate(0deg)"
+					},
+					"25%": {
+						transform: "translateY(-8px) rotate(1deg)"
+					},
+					"50%": {
+						transform: "translateY(-12px) rotate(0deg)"
+					},
+					"75%": {
+						transform: "translateY(-8px) rotate(-1deg)"
 					}
 				},
 				'aura-spin': {
@@ -230,11 +257,12 @@ export default {
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
 				'walk': 'walk 4s ease-in-out infinite',
 				'path-draw': 'path-draw 2s ease-in-out infinite',
-				'legendary-pulse': 'legendary-pulse 3s ease-in-out infinite',
-				'epic-pulse': 'epic-pulse 2.5s ease-in-out infinite',
-				'rare-pulse': 'rare-pulse 2s ease-in-out infinite',
-				'aura-spin': 'aura-spin 8s linear infinite',
-				'shimmer': 'shimmer 2s linear infinite'
+				'legendary-pulse': 'legendary-pulse 4s ease-in-out infinite',
+				'epic-pulse': 'epic-pulse 3s ease-in-out infinite',
+				'rare-pulse': 'rare-pulse 2.5s ease-in-out infinite',
+				'aura-spin': 'aura-spin 12s linear infinite',
+				'shimmer': 'shimmer 3s ease-in-out infinite',
+				'magical-float': 'magical-float 6s ease-in-out infinite'
 			}
 		}
 	},
