@@ -65,6 +65,11 @@ export default {
 					gold: 'hsl(var(--badge-gold))',
 					silver: 'hsl(var(--badge-silver))',
 					bronze: 'hsl(var(--badge-bronze))'
+				},
+				path: {
+					glow: 'hsl(var(--path-glow))',
+					primary: 'hsl(var(--path-primary))',
+					secondary: 'hsl(var(--path-secondary))'
 				}
 			},
 			fontFamily: {
@@ -123,13 +128,52 @@ export default {
 						transform: "scale(1)",
 						opacity: "1"
 					}
+				},
+				'float': {
+					"0%, 100%": {
+						transform: "translateY(0px)"
+					},
+					"50%": {
+						transform: "translateY(-10px)"
+					}
+				},
+				'glow-pulse': {
+					"0%, 100%": {
+						opacity: "0.5"
+					},
+					"50%": {
+						opacity: "1"
+					}
+				},
+				'walk': {
+					"0%": {
+						transform: "translateX(0) scaleX(1)"
+					},
+					"50%": {
+						transform: "translateX(50px) scaleX(1)"
+					},
+					"100%": {
+						transform: "translateX(100px) scaleX(-1)"
+					}
+				},
+				'path-draw': {
+					"0%": {
+						strokeDasharray: "0 1000"
+					},
+					"100%": {
+						strokeDasharray: "1000 0"
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
-				'scale-in': 'scale-in 0.2s ease-out'
+				'scale-in': 'scale-in 0.2s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+				'walk': 'walk 4s ease-in-out infinite',
+				'path-draw': 'path-draw 2s ease-in-out infinite'
 			}
 		}
 	},

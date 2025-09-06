@@ -67,6 +67,11 @@ All colors MUST be HSL for proper theming support.
 
     /* Animations */
     --transition-natural: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Quest Path Colors */
+    --path-glow: 200 85% 70%; /* Bright cyan glow */
+    --path-primary: 200 75% 60%; /* Main path color */
+    --path-secondary: 180 70% 65%; /* Secondary glow */
   }
 
   .dark {

@@ -81,9 +81,9 @@ const QuestPathView = ({ quests, onQuestClick, activeTab }: QuestPathViewProps) 
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-quest-progress border-quest-progress text-white shadow-lg shadow-quest-progress/30';
-      case 'in-progress': return 'bg-accent-vibrant border-accent-vibrant text-white shadow-lg shadow-accent-vibrant/30';
-      default: return 'bg-background border-border text-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/20';
+      case 'completed': return 'bg-gradient-to-br from-badge-gold to-badge-bronze border-badge-gold text-white shadow-xl shadow-badge-gold/40';
+      case 'in-progress': return 'bg-gradient-to-br from-path-glow to-path-primary border-path-glow text-white shadow-xl shadow-path-glow/50';
+      default: return 'bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30 text-foreground hover:border-path-glow hover:shadow-xl hover:shadow-path-glow/30';
     }
   };
 
@@ -125,41 +125,80 @@ const QuestPathView = ({ quests, onQuestClick, activeTab }: QuestPathViewProps) 
   };
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-quest-bg via-background to-accent/5 overflow-hidden">
-      {/* Animated Background Elements */}
+    <div className="relative w-full h-full bg-gradient-to-br from-path-primary/20 via-path-glow/10 to-path-secondary/20 overflow-hidden">
+      {/* Animated Background with Glowing Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-primary/5 rounded-full animate-pulse" />
-        <div className="absolute top-1/3 right-20 w-24 h-24 bg-accent-vibrant/5 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-quest-progress/5 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        {/* Main gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-blue-500/20 to-purple-600/10" />
+        
+        {/* Floating particles */}
+        <div className="absolute top-20 left-20 w-8 h-8 bg-path-glow/60 rounded-full animate-float blur-sm" />
+        <div className="absolute top-40 right-32 w-6 h-6 bg-path-primary/70 rounded-full animate-float blur-sm" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-32 left-16 w-4 h-4 bg-path-secondary/80 rounded-full animate-float blur-sm" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-60 left-1/2 w-5 h-5 bg-path-glow/50 rounded-full animate-float blur-sm" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute bottom-48 right-24 w-7 h-7 bg-path-primary/40 rounded-full animate-float blur-sm" style={{ animationDelay: '1.5s' }} />
+        
+        {/* Large glowing orbs */}
+        <div className="absolute top-16 right-16 w-32 h-32 bg-gradient-to-br from-path-glow/20 to-path-primary/10 rounded-full animate-glow-pulse blur-xl" />
+        <div className="absolute bottom-16 left-20 w-40 h-40 bg-gradient-to-br from-path-secondary/15 to-path-glow/20 rounded-full animate-glow-pulse blur-2xl" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* Quest Path SVG */}
+      {/* Enhanced Quest Path SVG */}
       <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
         <defs>
           <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="hsl(var(--accent-vibrant))" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="hsl(var(--quest-progress))" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="hsl(var(--path-glow))" stopOpacity="0.8" />
+            <stop offset="30%" stopColor="hsl(var(--path-primary))" stopOpacity="0.9" />
+            <stop offset="70%" stopColor="hsl(var(--path-secondary))" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="hsl(var(--path-glow))" stopOpacity="0.7" />
           </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <filter id="pathGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
             <feMerge> 
               <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="innerBlur"/>
+            <feMerge> 
+              <feMergeNode in="innerBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
         
         {questNodes.length > 1 && (
-          <path
-            d={createPath()}
-            stroke="url(#pathGradient)"
-            strokeWidth="4"
-            fill="none"
-            strokeDasharray="8,4"
-            filter="url(#glow)"
-            className="animate-pulse"
-          />
+          <>
+            {/* Outer glow path */}
+            <path
+              d={createPath()}
+              stroke="url(#pathGradient)"
+              strokeWidth="12"
+              fill="none"
+              filter="url(#pathGlow)"
+              className="animate-glow-pulse"
+              opacity="0.6"
+            />
+            {/* Main glowing path */}
+            <path
+              d={createPath()}
+              stroke="url(#pathGradient)"
+              strokeWidth="6"
+              fill="none"
+              filter="url(#innerGlow)"
+              className="animate-pulse"
+            />
+            {/* Inner bright path */}
+            <path
+              d={createPath()}
+              stroke="hsl(var(--path-glow))"
+              strokeWidth="2"
+              fill="none"
+              className="animate-glow-pulse"
+              style={{ animationDelay: '0.5s' }}
+            />
+          </>
         )}
       </svg>
 
@@ -178,65 +217,77 @@ const QuestPathView = ({ quests, onQuestClick, activeTab }: QuestPathViewProps) 
               top: `${questNode.position.y}%`,
               transform: 'translate(-50%, -50%)',
             }}>
-              {/* Quest Node */}
-              <button
-                onClick={() => quest && onQuestClick(quest)}
-                onMouseEnter={() => setHoveredQuest(questNode.id)}
-                onMouseLeave={() => setHoveredQuest(null)}
-                className={`
-                  ${getNodeSize(questNode.status, isHovered)} 
-                  rounded-full border-3 flex items-center justify-center 
-                  transition-all duration-300 transform
-                  ${getStatusColor(questNode.status)}
-                  ${isAnimated ? 'animate-scale-in' : 'opacity-0'}
-                  ${isHovered ? 'scale-110 z-20' : 'hover:scale-105'}
-                  relative group
-                `}
-                style={{ 
-                  animationDelay: `${index * 200}ms`,
-                  animationFillMode: 'forwards'
-                }}
-              >
-                <IconComponent className="w-6 h-6" />
+              {/* Enhanced Quest Node */}
+              <div className="relative">
+                {/* Node glow effect */}
+                <div className={`absolute inset-0 rounded-full animate-glow-pulse ${
+                  questNode.status === 'completed' ? 'bg-badge-gold/30' :
+                  questNode.status === 'in-progress' ? 'bg-path-glow/40' :
+                  'bg-primary/20'
+                } blur-lg transform scale-150`} />
                 
-                {/* Status Indicator */}
-                <div className="absolute -top-1 -right-1">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                    questNode.status === 'completed' ? 'bg-quest-progress' :
-                    questNode.status === 'in-progress' ? 'bg-accent-vibrant' :
+                <button
+                  onClick={() => quest && onQuestClick(quest)}
+                  onMouseEnter={() => setHoveredQuest(questNode.id)}
+                  onMouseLeave={() => setHoveredQuest(null)}
+                  className={`
+                    ${getNodeSize(questNode.status, isHovered)} 
+                    rounded-full border-3 flex items-center justify-center 
+                    transition-all duration-500 transform relative z-10
+                    ${getStatusColor(questNode.status)}
+                    ${isAnimated ? 'animate-scale-in animate-float' : 'opacity-0'}
+                    ${isHovered ? 'scale-125 z-20' : 'hover:scale-110'}
+                    group backdrop-blur-sm
+                  `}
+                  style={{ 
+                    animationDelay: `${index * 300}ms`,
+                    animationFillMode: 'forwards'
+                  }}
+                >
+                  <IconComponent className="w-6 h-6" />
+                </button>
+                
+                {/* Enhanced Status Indicator */}
+                <div className="absolute -top-2 -right-2">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-background shadow-lg ${
+                    questNode.status === 'completed' ? 'bg-badge-gold animate-glow-pulse' :
+                    questNode.status === 'in-progress' ? 'bg-path-glow animate-pulse' :
                     'bg-muted'
                   }`}>
                     <StatusIcon className="w-3 h-3 text-white" />
                   </div>
                 </div>
 
-                {/* Progress Ring for In-Progress Quests */}
+                {/* Enhanced Progress Ring for In-Progress Quests */}
                 {questNode.status === 'in-progress' && (
                   <div className="absolute inset-0 rounded-full">
                     <svg className="w-full h-full transform -rotate-90">
+                      {/* Background ring */}
                       <circle
                         cx="50%"
                         cy="50%"
                         r="45%"
                         fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeOpacity="0.3"
+                        stroke="hsl(var(--path-primary))"
+                        strokeWidth="3"
+                        strokeOpacity="0.2"
                       />
+                      {/* Progress ring with glow */}
                       <circle
                         cx="50%"
                         cy="50%"
                         r="45%"
                         fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                        stroke="hsl(var(--path-glow))"
+                        strokeWidth="3"
                         strokeDasharray={`${questNode.progress * 2.83} 283`}
-                        className="transition-all duration-500"
+                        className="transition-all duration-700 animate-glow-pulse"
+                        filter="url(#innerGlow)"
                       />
                     </svg>
                   </div>
                 )}
-              </button>
+              </div>
 
               {/* Hover Card */}
               {isHovered && (
@@ -306,17 +357,27 @@ const QuestPathView = ({ quests, onQuestClick, activeTab }: QuestPathViewProps) 
         </div>
       </div>
 
-      {/* Character Walking Animation (Optional Enhancement) */}
-      {activeTab === 'in-progress' && questNodes.some(q => q.status === 'in-progress') && (
-        <div className="absolute bottom-10 left-10 z-10">
-          <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center animate-bounce">
-            <Leaf className="w-6 h-6 text-primary-foreground" />
+      {/* Animated Character Walking */}
+      <div className="absolute bottom-16 left-16 z-10 animate-walk">
+        <div className="relative">
+          {/* Character shadow */}
+          <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-8 h-3 bg-black/20 rounded-full blur-sm" />
+          
+          {/* Character figure */}
+          <div className="relative w-16 h-16 bg-gradient-to-br from-primary to-primary-glow rounded-full flex items-center justify-center shadow-xl animate-float">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-glow to-primary rounded-full flex items-center justify-center">
+              <Leaf className="w-6 h-6 text-white animate-glow-pulse" />
+            </div>
           </div>
-          <div className="text-center mt-2">
-            <span className="text-xs text-muted-foreground font-medium">Keep Going!</span>
+          
+          {/* Motion lines */}
+          <div className="absolute top-2 -left-4 space-y-1">
+            <div className="w-6 h-0.5 bg-path-glow/60 rounded-full animate-pulse" />
+            <div className="w-4 h-0.5 bg-path-primary/40 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+            <div className="w-5 h-0.5 bg-path-secondary/50 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
