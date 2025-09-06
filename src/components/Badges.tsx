@@ -209,62 +209,40 @@ const Badges = () => {
               key={badge.id}
               className={`p-6 rounded-2xl ${getBadgeStyles(rarity, isEarned)} cursor-pointer`}
             >
-              {/* Lock overlay for unearned badges */}
-              {!isEarned && (
-                <div className="absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-30">
-                  <div className="bg-black/40 rounded-full p-3 backdrop-blur-sm border border-white/20">
-                    <Lock className="w-6 h-6 text-white/90 drop-shadow-lg" />
-                  </div>
-                </div>
-              )}
-
-              {/* Subtle preview glow for unearned badges */}
-              {!isEarned && (
-                <div className={`absolute inset-0 rounded-2xl opacity-20 animate-pulse ${
-                  rarity === 'legendary' ? 'bg-gradient-to-br from-badge-enhanced-legendary/10 to-badge-enhanced-legendary-glow/5' :
-                  rarity === 'epic' ? 'bg-gradient-to-br from-badge-enhanced-epic/8 to-badge-enhanced-epic-glow/4' :
-                  rarity === 'rare' ? 'bg-gradient-to-br from-badge-enhanced-rare/6 to-badge-enhanced-rare-glow/3' :
-                  'bg-gradient-to-br from-badge-enhanced-common/5 to-badge-enhanced-common-glow/2'
-                }`} style={{ animationDuration: '3s' }} />
-              )}
-
-              {/* Legendary Divine Aura */}
-              {isEarned && rarity === 'legendary' && (
+              {/* Legendary Divine Aura (preview visible even if locked) */}
+              {rarity === 'legendary' && (
                 <>
-                  <div className="absolute -inset-6 rounded-3xl opacity-40 animate-aura-spin">
+                  <div className={`absolute -inset-6 rounded-3xl ${isEarned ? 'opacity-40' : 'opacity-25'} animate-aura-spin`}>
                     <div className="w-full h-full rounded-3xl bg-gradient-conic from-badge-enhanced-legendary via-badge-enhanced-legendary-glow via-transparent to-badge-enhanced-legendary blur-lg" />
                   </div>
-                  <div className="absolute -inset-4 rounded-3xl opacity-60 animate-aura-spin" style={{ animationDirection: 'reverse', animationDuration: '8s' }}>
+                  <div className={`absolute -inset-4 rounded-3xl ${isEarned ? 'opacity-60' : 'opacity-35'} animate-aura-spin`} style={{ animationDirection: 'reverse', animationDuration: '8s' }}>
                     <div className="w-full h-full rounded-3xl bg-gradient-conic from-transparent via-badge-enhanced-legendary-glow to-transparent blur-md" />
                   </div>
                 </>
               )}
 
-              {/* Epic Mystical Aura */}
-              {isEarned && rarity === 'epic' && (
+              {/* Epic Mystical Aura (preview visible even if locked) */}
+              {rarity === 'epic' && (
                 <>
-                  <div className="absolute -inset-4 rounded-2xl opacity-35 animate-aura-spin" style={{ animationDuration: '10s' }}>
+                  <div className={`absolute -inset-4 rounded-2xl ${isEarned ? 'opacity-35' : 'opacity-20'} animate-aura-spin`} style={{ animationDuration: '10s' }}>
                     <div className="w-full h-full rounded-2xl bg-gradient-conic from-badge-enhanced-epic via-badge-enhanced-epic-glow to-transparent blur-lg" />
                   </div>
-                  <div className="absolute -inset-2 rounded-2xl opacity-50 animate-aura-spin" style={{ animationDirection: 'reverse', animationDuration: '6s' }}>
+                  <div className={`absolute -inset-2 rounded-2xl ${isEarned ? 'opacity-50' : 'opacity-30'} animate-aura-spin`} style={{ animationDirection: 'reverse', animationDuration: '6s' }}>
                     <div className="w-full h-full rounded-2xl bg-gradient-conic from-transparent via-badge-enhanced-epic-glow to-badge-enhanced-epic blur-sm" />
                   </div>
                 </>
               )}
 
-              {/* Rare Crystal Aura */}
-              {isEarned && rarity === 'rare' && (
-                <div className="absolute -inset-3 rounded-2xl opacity-30 animate-aura-spin" style={{ animationDuration: '8s' }}>
+              {/* Rare Crystal Aura (preview visible even if locked) */}
+              {rarity === 'rare' && (
+                <div className={`absolute -inset-3 rounded-2xl ${isEarned ? 'opacity-30' : 'opacity-20'} animate-aura-spin`} style={{ animationDuration: '8s' }}>
                   <div className="w-full h-full rounded-2xl bg-gradient-conic from-badge-enhanced-rare via-badge-enhanced-rare-glow to-transparent blur-md" />
                 </div>
               )}
 
-              {/* Enhanced Shimmer Effect */}
-              {isEarned && (
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" 
-                     style={{ backgroundSize: '300% 100%' }} />
-              )}
-
+              {/* Enhanced Shimmer Effect (preview on hover) */}
+              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer opacity-0 ${isEarned ? 'group-hover:opacity-100' : 'group-hover:opacity-90'} transition-opacity duration-500`} 
+                   style={{ backgroundSize: '300% 100%' }} />
               {/* Rarity indicator with enhanced styling */}
               <div className="absolute top-3 right-3 z-10">
                 <Badge 
@@ -350,9 +328,9 @@ const Badges = () => {
                   {badge.description}
                 </p>
                 
-                {/* Lock message for unearned badges */}
+                {/* Lock message for unearned badges - subtle */}
                 {!isEarned && (
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-muted/60 text-muted-foreground border border-muted">
+                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-muted/50 text-muted-foreground border border-muted/80">
                     <Lock className="w-3 h-3" />
                     <span>Complete quests to unlock</span>
                   </div>
