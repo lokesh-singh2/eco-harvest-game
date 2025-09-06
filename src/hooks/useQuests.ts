@@ -76,7 +76,16 @@ export const useQuests = () => {
         .from('user_quests')
         .select(`
           *,
-          quest:quests(*)
+          quest:quests(
+            *,
+            quest_tasks:quest_tasks(
+              id,
+              title,
+              description,
+              order_index,
+              is_required
+            )
+          )
         `)
         .eq('user_id', user.id);
       
